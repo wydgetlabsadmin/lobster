@@ -606,11 +606,11 @@ EOF
             download_thumbnails "$response" "3"
             select_desktop_entry ""
         else
-            [ "$use_external_menu" = "1" ] && choice=$(printf "%s" "$response" | rofi -dmenu -p "" -mesg "Choose a Movie or TV Show" -display-columns 1)
-            [ "$use_external_menu" = "0" ] && choice=$(printf "%s" "$response" | fzf --reverse --with-nth 1 -d "\t" --header "Choose a Movie or TV Show")
-            title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
-            media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
-            media_id=$(printf "%s" "$choice" | cut -f2)
+              # Automatically select the first option from the search results
+        choice=$(echo "$response" | head -n 1)
+        title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
+        media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
+        media_id=$(printf "%s" "$choice" | cut -f2)
         fi
         [ "$media_type" = "tv" ] && choose_episode
         keep_running="true"
