@@ -117,7 +117,7 @@ trap cleanup EXIT INT TERM
         [ -z "$subs_language" ] && subs_language="english"
         subs_language="$(printf "%s" "$subs_language" | cut -c2-)"
         [ -z "$histfile" ] && histfile="$data_dir/lobster_history.txt" && mkdir -p "$(dirname "$histfile")"
-        [ -z "$use_external_menu" ] && use_external_menu="1"
+        [ -z "$use_external_menu" ] && use_external_menu="0"
         [ -z "$image_preview" ] && image_preview="0"
         [ -z "$debug" ] && debug=0
         [ -z "$preview_window_size" ] && preview_window_size=up:60%:wrap
@@ -271,10 +271,11 @@ EOF
             title=$(printf "%s" "$choice" | $sed -nE "s@[0-9]* (.*) \((tv|movie)\)@\1@p")
             media_type=$(printf "%s" "$choice" | $sed -nE "s@[0-9]* (.*) \((tv|movie)\)@\2@p")
         else
-            image_preview_fzf "$1"
-            media_id=$(printf "%s" "$choice" | $sed -nE "s@.* ([0-9]*)\.jpg@\1@p")
-            title=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\1@p")
-            media_type=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\2@p")
+            # Assuming $1 contains the list from which you need to select the first item
+        choice=$(echo "$1" | head -n 1)
+        media_id=$(printf "%s" "$choice" | $sed -nE "s@.* ([0-9]*)\.jpg@\1@p")
+        title=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\1@p")
+        media_type=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\2@p")
         fi
     }
 
