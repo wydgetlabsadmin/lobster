@@ -521,7 +521,7 @@ EOF
     }
 
     download_video() {
-         echo "Argument 1: $1"
+         echo "Movie URL:$1"
     echo "Argument 2: $2"
     echo "Argument 3: $3"
      
@@ -607,7 +607,6 @@ EOF
             select_desktop_entry ""
         else
               # Automatically select the first option from the search results
-              echo $response
         choice=$(echo "$response" | head -n 1)
         title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
         media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
