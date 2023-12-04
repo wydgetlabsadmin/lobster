@@ -603,7 +603,7 @@ EOF
             download_thumbnails "$response" "3"
             select_desktop_entry ""
         else
-           [ "$use_external_menu" = "0" ] && choice=$(printf "%s" "$response" | head -n 1)
+            [ "$use_external_menu" = "0" ] && choice=$(printf "%s\n" "$response" | awk 'NR==1')
         fi
         [ "$media_type" = "tv" ] && choose_episode
         keep_running="true"
