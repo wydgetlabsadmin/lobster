@@ -117,7 +117,7 @@ trap cleanup EXIT INT TERM
         [ -z "$subs_language" ] && subs_language="english"
         subs_language="$(printf "%s" "$subs_language" | cut -c2-)"
         [ -z "$histfile" ] && histfile="$data_dir/lobster_history.txt" && mkdir -p "$(dirname "$histfile")"
-        [ -z "$use_external_menu" ] && use_external_menu="0"
+        [ -z "$use_external_menu" ] && use_external_menu="1"
         [ -z "$image_preview" ] && image_preview="0"
         [ -z "$debug" ] && debug=0
         [ -z "$preview_window_size" ] && preview_window_size=up:60%:wrap
