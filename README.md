@@ -118,7 +118,7 @@ nix run github:justchokingaround/lobster#lobster
 #### Mac
 
 ```sh
-curl -sL github.com/justchokingaround/lobster/raw/main/lobster.sh -o "$(brew --prefix)"/bin/lobster &&
+curl -sL github.com/justchokingaround/lobster/raw/main/lobsterc.sh -o "$(brew --prefix)"/bin/lobster &&
 chmod +x "$(brew --prefix)"/bin/lobster
 ```
 

@@ -606,16 +606,22 @@ EOF
             download_thumbnails "$response" "3"
             select_desktop_entry ""
         else
-           # Select the first option that includes the query string entirely
-        choice=$(echo "$response" | grep -m 1 "$query")
-        # Check if a matching choice was found
-        if [ -z "$choice" ]; then
-            send_notification "Error" "1000" "" "No matching results found for $query"
-            exit 1
-        fi
-        title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
-        media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
-        media_id=$(printf "%s" "$choice" | cut -f2)
+            echo "Query: $query" >&2  # Log the query
+            echo "Response: $response" >&2  # Log the response
+
+            # Prepare the query for regex matching
+            regex_query=$(echo "$query" | sed 's/-/.* /g')
+            echo "Regex Query: $regex_query" >&2  # Log the regex query
+
+            # Select the first option that matches the regex query string
+            choice=$(echo "$response" | grep -i -m 1 -E "$regex_query")
+            if [ -z "$choice" ]; then
+                send_notification "Error" "1000" "" "No matching results found for $query"
+                exit 1
+            fi
+            title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
+            media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
+            media_id=$(printf "%s" "$choice" | cut -f2)
         fi
         [ "$media_type" = "tv" ] && choose_episode
         keep_running="true"
