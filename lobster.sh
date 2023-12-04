@@ -271,11 +271,10 @@ EOF
             title=$(printf "%s" "$choice" | $sed -nE "s@[0-9]* (.*) \((tv|movie)\)@\1@p")
             media_type=$(printf "%s" "$choice" | $sed -nE "s@[0-9]* (.*) \((tv|movie)\)@\2@p")
         else
-            # Assuming $1 contains the list from which you need to select the first item
-        choice=$(echo "$1" | head -n 1)
-        media_id=$(printf "%s" "$choice" | $sed -nE "s@.* ([0-9]*)\.jpg@\1@p")
-        title=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\1@p")
-        media_type=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\2@p")
+            image_preview_fzf "$1"
+            media_id=$(printf "%s" "$choice" | $sed -nE "s@.* ([0-9]*)\.jpg@\1@p")
+            title=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\1@p")
+            media_type=$(printf "%s" "$choice" | $sed -nE "s@[[:space:]]* (.*) \[.*\] \((tv|movie)\)  [0-9]*\.jpg@\2@p")
         fi
     }
 
@@ -604,11 +603,7 @@ EOF
             download_thumbnails "$response" "3"
             select_desktop_entry ""
         else
-            [ "$use_external_menu" = "1" ] && choice=$(printf "%s" "$response" | rofi -dmenu -p "" -mesg "Choose a Movie or TV Show" -display-columns 1)
-            [ "$use_external_menu" = "0" ] && choice=$(printf "%s" "$response" | fzf --reverse --with-nth 1 -d "\t" --header "Choose a Movie or TV Show")
-            title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
-            media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
-            media_id=$(printf "%s" "$choice" | cut -f2)
+           [ "$use_external_menu" = "0" ] && choice=$(printf "%s" "$response" | head -n 1)
         fi
         [ "$media_type" = "tv" ] && choose_episode
         keep_running="true"
