@@ -521,7 +521,10 @@ EOF
     }
 
     download_video() {
-        ffmpeg -loglevel error -stats -i "$1" -c copy "$3/$2".mp4
+         echo "Argument 1: $1"
+    echo "Argument 2: $2"
+    echo "Argument 3: $3"
+     
     }
 
     loop() {
@@ -530,7 +533,7 @@ EOF
             [ -z "$embed_link" ] && exit 1
             get_json
             [ -z "$video_link" ] && exit 1
-            if [ "$download" = "1" ]; then
+            
                 if [ "$media_type" = "movie" ]; then
                     if [ "$image_preview" = 1 ]; then
                         download_video "$video_link" "$title" "$download_dir" "$images_cache_dir/  $title ($media_type)  $media_id.jpg" || exit 1
@@ -549,7 +552,7 @@ EOF
                     fi
                 fi
                 exit
-            fi
+            
             play_video && wait
             [ "$history" = 1 ] && save_history
             prompt_to_continue
@@ -603,7 +606,11 @@ EOF
             download_thumbnails "$response" "3"
             select_desktop_entry ""
         else
-            [ "$use_external_menu" = "0" ] && choice=$(printf "%s\n" "$response" | awk 'NR==1')
+            [ "$use_external_menu" = "1" ] && choice=$(printf "%s" "$response" | rofi -dmenu -p "" -mesg "Choose a Movie or TV Show" -display-columns 1)
+            [ "$use_external_menu" = "0" ] && choice=$(printf "%s" "$response" | fzf --reverse --with-nth 1 -d "\t" --header "Choose a Movie or TV Show")
+            title=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\1@p")
+            media_type=$(printf "%s" "$choice" | $sed -nE "s@(.*) \((movie|tv)\).*@\2@p")
+            media_id=$(printf "%s" "$choice" | cut -f2)
         fi
         [ "$media_type" = "tv" ] && choose_episode
         keep_running="true"
